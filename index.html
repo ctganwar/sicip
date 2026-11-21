@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SICIP Certificate Server</title>
-
     <style>
         body {
             margin: 0;
@@ -15,7 +14,6 @@
             align-items: center;
             min-height: 100vh;
         }
-
         .box {
             background: white;
             width: 90%;
@@ -25,25 +23,20 @@
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.12);
         }
-
         #loading {
             font-size: 20px;
             color: #333;
         }
-
         #offline {
             display: none;
         }
-
         #offline h2 {
             color: #d32f2f;
         }
-
         #offline p {
             color: #555;
             line-height: 1.7;
         }
-
         button {
             margin-top: 15px;
             padding: 10px 25px;
@@ -56,67 +49,48 @@
         }
     </style>
 </head>
-
 <body>
-
 <div class="box">
-
     <div id="loading">
         ⏳ সার্ভারের সাথে সংযোগ করা হচ্ছে...
     </div>
-
     <div id="offline">
         <h2>⚠️ সার্ভার বন্ধ আছে</h2>
-
         <p>
             "শুধু ফেনী কারিগরি প্রশিক্ষণ কেন্দ্রের উত্তীর্ণ প্রশিক্ষণার্থীরা সনদ উত্তোলন করতে পারবে।"
             SICIP Certificate Server বর্তমানে চালু নেই
             অথবা সার্ভারে সংযোগ করা যাচ্ছে না।
-            সার্ভারটি সাধারণত রবিবার থেকে বৃহস্পতিবার সকাল ৯.০০টা থেকে বিকাল ৪.০০ টা পর্যন্ত খোলা থাকবে। সরকারি ছুটি এবং এই সময় ব্যতীত সার্ভার বন্ধ থাকবে।
             অনলাইন আবেদন ফরম পূরণ করার সময় সার্ভারটি সকাল ৭:০০টা হতে রাত ১০:৩০টা পর্যন্ত খোলা থাকবে।
         </p>
-
         <button onclick="checkServer()">
             🔄 আবার চেষ্টা করুন
         </button>
     </div>
-
 </div>
-
-
 <script>
 const SERVER = "https://anwar.tail6ab506.ts.net:8443/";
 const HEALTH_URL = SERVER + "health";
-
 async function checkServer() {
     const loading = document.getElementById("loading");
     const offline = document.getElementById("offline");
-
     loading.style.display = "block";
     offline.style.display = "none";
-
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
-
     try {
         const response = await fetch(HEALTH_URL, {
             cache: "no-store",
             signal: controller.signal
         });
-
         if (!response.ok) {
             throw new Error("HTTP " + response.status);
         }
-
         const data = await response.json();
-
         if (data.status !== "ok") {
             throw new Error("Health check failed");
         }
-
         // সার্ভার সচল হলে মূল সার্টিফিকেট পেজে যাবে
         window.location.replace(SERVER);
-
     } catch (error) {
         console.error("SICIP server check failed:", error);
         loading.style.display = "none";
@@ -125,11 +99,7 @@ async function checkServer() {
         clearTimeout(timeout);
     }
 }
-
 checkServer();
 </script>
-
-
-
 </body>
 </html>
